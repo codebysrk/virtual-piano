@@ -1,0 +1,100 @@
+:root {
+  --piano-height: 220px;
+  --black-width: 40px;
+  --black-gap: 1.1rem;
+  --black-padding: 3%;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+#container {
+  width: 100%;
+  padding: 1rem;
+}
+
+/* PIANO */
+.piano {
+  position: relative;
+  width: 100%;
+  height: var(--piano-height);
+  background: #000;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* WHITE KEYS */
+.white-keys {
+  display: flex;
+  height: 100%;
+}
+
+.white {
+  flex: 1;
+  background: #fff;
+  border-right: 1px solid #ccc;
+  border-radius: 0 0 8px 8px;
+  touch-action: manipulation;
+}
+
+.white:last-child {
+  border-right: none;
+}
+
+.white:active {
+  background: #eaeaea;
+}
+
+/* BLACK KEYS */
+.black-keys {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 var(--black-padding);
+  pointer-events: none;
+}
+
+.group {
+  display: flex;
+  gap: var(--black-gap);
+  pointer-events: auto;
+}
+
+.black {
+  width: var(--black-width);
+  height: 100%;
+  background: #111;
+  border-radius: 0 0 6px 6px;
+  box-shadow: inset 0 -4px 0 rgba(255, 255, 255, 0.1);
+  touch-action: manipulation;
+}
+
+.black:active {
+  background: #333;
+}
+
+/* MOBILE SCALE ONLY (DESIGN SAME) */
+@media (max-width: 768px) {
+  :root {
+    --piano-height: 160px;
+    --black-width: 22px;
+    --black-gap: 0.6rem;
+    --black-padding: 2%;
+  }
+}

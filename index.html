@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Piano Final Fix</title>
+    <style>
+      :root {
+        --piano-height: 280px;
+        --white-key-width: calc(100% / 21);
+        --black-key-width: 3.5%;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        background: radial-gradient(circle at center, #222, #000);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: sans-serif;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      #container {
+        width: 95%;
+        max-width: 1200px;
+        position: relative;
+      }
+
+      .piano {
+        position: relative;
+        width: 100%;
+        height: var(--piano-height);
+        background: #111;
+        padding: 2% 1.5% 1.5% 1.5%;
+        border-radius: 12px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+        perspective: 1000px;
+      }
+
+      .felt {
+        position: absolute;
+        top: 2%;
+        left: 1.5%;
+        right: 1.5%;
+        height: 15px;
+        background: #900;
+        z-index: 5;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.6);
+      }
+
+      .keyboard {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        isolation: isolate;
+      }
+
+      .white-keys {
+        display: flex;
+        height: 100%;
+        position: relative;
+        z-index: 10;
+      }
+
+      .white {
+        flex: 1;
+        background: linear-gradient(to bottom, #eee 0%, #fff 100%);
+        border: 1px solid #bbb;
+        border-top: none;
+        border-radius: 0 0 6px 6px;
+        box-shadow: inset 0 -1px 0 #fff, inset 0 -5px 5px rgba(0, 0, 0, 0.1),
+          0 2px 3px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        position: relative;
+        transform-origin: top;
+        transition: transform 0.05s, background 0.1s;
+      }
+
+      .white.active,
+      .white:active {
+        background: linear-gradient(to bottom, #ddd 0%, #eee 100%);
+        border-bottom: 1px solid #888;
+        transform: rotateX(-5deg) scale(0.98);
+        box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .black-keys {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60%;
+        pointer-events: none;
+        z-index: 100;
+      }
+
+      .black {
+        position: absolute;
+        top: 0;
+        width: var(--black-key-width);
+        height: 100%;
+        background: linear-gradient(180deg, #333 0%, #000 100%);
+        border-radius: 0 0 3px 3px;
+        border: 1px solid #000;
+        border-top: none;
+        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3),
+          2px 5px 6px rgba(0, 0, 0, 0.5);
+        pointer-events: auto;
+        cursor: pointer;
+        transform-origin: top;
+        transition: transform 0.05s;
+        will-change: transform;
+
+        transform: translateX(-50%);
+        z-index: 101;
+      }
+
+      .black.active,
+      .black:active {
+        background: #111;
+        transform: translateX(-50%) rotateX(-5deg) translate3d(0, 0, 1px);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1),
+          1px 2px 3px rgba(0, 0, 0, 0.5);
+      }
+
+      .b1 {
+        left: calc(100% / 21 * 1);
+      }
+      .b2 {
+        left: calc(100% / 21 * 2);
+      }
+
+      .b3 {
+        left: calc(100% / 21 * 4);
+      }
+      .b4 {
+        left: calc(100% / 21 * 5);
+      }
+      .b5 {
+        left: calc(100% / 21 * 6);
+      }
+
+      .b6 {
+        left: calc(100% / 21 * 8);
+      }
+      .b7 {
+        left: calc(100% / 21 * 9);
+      }
+
+      .b8 {
+        left: calc(100% / 21 * 11);
+      }
+      .b9 {
+        left: calc(100% / 21 * 12);
+      }
+      .b10 {
+        left: calc(100% / 21 * 13);
+      }
+
+      .b11 {
+        left: calc(100% / 21 * 15);
+      }
+      .b12 {
+        left: calc(100% / 21 * 16);
+      }
+
+      .b13 {
+        left: calc(100% / 21 * 18);
+      }
+      .b14 {
+        left: calc(100% / 21 * 19);
+      }
+      .b15 {
+        left: calc(100% / 21 * 20);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div class="piano">
+        <div class="felt"></div>
+        <div class="keyboard">
+          <div class="white-keys">
+            <div class="white" data-freq="261.63"></div>
+            <div class="white" data-freq="293.66"></div>
+            <div class="white" data-freq="329.63"></div>
+            <div class="white" data-freq="349.23"></div>
+            <div class="white" data-freq="392.00"></div>
+            <div class="white" data-freq="440.00"></div>
+            <div class="white" data-freq="493.88"></div>
+            <div class="white" data-freq="523.25"></div>
+            <div class="white" data-freq="587.33"></div>
+            <div class="white" data-freq="659.25"></div>
+            <div class="white" data-freq="698.46"></div>
+            <div class="white" data-freq="783.99"></div>
+            <div class="white" data-freq="880.00"></div>
+            <div class="white" data-freq="987.77"></div>
+            <div class="white" data-freq="1046.50"></div>
+            <div class="white" data-freq="1174.66"></div>
+            <div class="white" data-freq="1318.51"></div>
+            <div class="white" data-freq="1396.91"></div>
+            <div class="white" data-freq="1567.98"></div>
+            <div class="white" data-freq="1760.00"></div>
+            <div class="white" data-freq="1975.53"></div>
+          </div>
+
+          <div class="black-keys">
+            <div class="black b1" data-freq="277.18"></div>
+            <div class="black b2" data-freq="311.13"></div>
+            <div class="black b3" data-freq="369.99"></div>
+            <div class="black b4" data-freq="415.30"></div>
+            <div class="black b5" data-freq="466.16"></div>
+            <div class="black b6" data-freq="554.37"></div>
+            <div class="black b7" data-freq="622.25"></div>
+            <div class="black b8" data-freq="739.99"></div>
+            <div class="black b9" data-freq="830.61"></div>
+            <div class="black b10" data-freq="932.33"></div>
+            <div class="black b11" data-freq="1108.73"></div>
+            <div class="black b12" data-freq="1244.51"></div>
+            <div class="black b13" data-freq="1479.98"></div>
+            <div class="black b14" data-freq="1661.22"></div>
+            <div class="black b15" data-freq="1864.66"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      const audioCtx = new AudioCtx();
+
+      function playNote(freq) {
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+
+        const oscillator = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        oscillator.type = "triangle";
+        oscillator.frequency.value = freq;
+
+        oscillator.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        gain.gain.setValueAtTime(0, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.01);
+        gain.gain.exponentialRampToValueAtTime(
+          0.001,
+          audioCtx.currentTime + 0.5
+        );
+
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.5);
+      }
+
+      const keys = document.querySelectorAll(".white, .black");
+
+      function pressKey(e) {
+        e.stopPropagation();
+        if (e.type === "touchstart") e.preventDefault();
+
+        const key = e.currentTarget;
+        const freq = key.dataset.freq;
+
+        if (!freq) return;
+
+        playNote(freq);
+
+        key.classList.add("active");
+        setTimeout(() => key.classList.remove("active"), 150);
+      }
+
+      keys.forEach((key) => {
+        key.addEventListener("mousedown", pressKey);
+        key.addEventListener("touchstart", pressKey);
+      });
+    </script>
+  </body>
+</html>
