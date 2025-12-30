@@ -1,8 +1,7 @@
 :root {
-  --piano-height: 220px;
-  --black-width: 40px;
-  --black-gap: 1.1rem;
-  --black-padding: 3%;
+  --piano-height: 280px;
+  --white-key-width: calc(100% / 21);
+  --black-key-width: 3.5%;
 }
 
 * {
@@ -13,88 +12,174 @@
 
 body {
   min-height: 100vh;
-  background: #111;
+  background: radial-gradient(circle at center, #222, #000);
   display: flex;
   justify-content: center;
-  align-items: end;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  align-items: center;
+  font-family: sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 #container {
-  width: 100%;
-  padding: 1rem;
+  width: 95%;
+  max-width: 1200px;
+  position: relative;
 }
 
-/* PIANO */
 .piano {
   position: relative;
   width: 100%;
   height: var(--piano-height);
-  background: #000;
-  border-radius: 14px;
-  overflow: hidden;
+  background: #111;
+  padding: 2% 1.5% 1.5% 1.5%;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  perspective: 1000px;
 }
 
-/* WHITE KEYS */
+.felt {
+  position: absolute;
+  top: 2%;
+  left: 1.5%;
+  right: 1.5%;
+  height: 15px;
+  background: #900;
+  z-index: 5;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.6);
+}
+
+.keyboard {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  isolation: isolate;
+}
+
 .white-keys {
   display: flex;
   height: 100%;
+  position: relative;
+  z-index: 10;
 }
 
 .white {
   flex: 1;
-  background: #fff;
-  border-right: 1px solid #ccc;
-  border-radius: 0 0 8px 8px;
-  touch-action: manipulation;
+  background: linear-gradient(to bottom, #eee 0%, #fff 100%);
+  border: 1px solid #bbb;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  box-shadow: inset 0 -1px 0 #fff, inset 0 -5px 5px rgba(0, 0, 0, 0.1),
+    0 2px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  position: relative;
+  transform-origin: top;
+  transition: transform 0.05s, background 0.1s;
 }
 
-.white:last-child {
-  border-right: none;
-}
-
+.white.active,
 .white:active {
-  background: #eaeaea;
+  background: linear-gradient(to bottom, #ddd 0%, #eee 100%);
+  border-bottom: 1px solid #888;
+  transform: rotateX(-5deg) scale(0.98);
+  box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* BLACK KEYS */
 .black-keys {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
+  width: 100%;
   height: 60%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 var(--black-padding);
   pointer-events: none;
-}
-
-.group {
-  display: flex;
-  gap: var(--black-gap);
-  pointer-events: auto;
+  z-index: 100;
 }
 
 .black {
-  width: var(--black-width);
+  position: absolute;
+  top: 0;
+  width: var(--black-key-width);
   height: 100%;
-  background: #111;
-  border-radius: 0 0 6px 6px;
-  box-shadow: inset 0 -4px 0 rgba(255, 255, 255, 0.1);
-  touch-action: manipulation;
+  background: linear-gradient(180deg, #333 0%, #000 100%);
+  border-radius: 0 0 3px 3px;
+  border: 1px solid #000;
+  border-top: none;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3),
+    2px 5px 6px rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+  cursor: pointer;
+  transform-origin: top;
+  transition: transform 0.05s;
+  will-change: transform;
+
+  transform: translateX(-50%);
+  z-index: 101;
 }
 
+.black.active,
 .black:active {
-  background: #333;
+  background: #111;
+  transform: translateX(-50%) rotateX(-5deg) translate3d(0, 0, 1px);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1),
+    1px 2px 3px rgba(0, 0, 0, 0.5);
 }
 
-/* MOBILE SCALE ONLY (DESIGN SAME) */
-@media (max-width: 768px) {
-  :root {
-    --piano-height: 160px;
-    --black-width: 22px;
-    --black-gap: 0.6rem;
-    --black-padding: 2%;
-  }
+.b1 {
+  left: calc(100% / 21 * 1);
+}
+
+.b2 {
+  left: calc(100% / 21 * 2);
+}
+
+.b3 {
+  left: calc(100% / 21 * 4);
+}
+
+.b4 {
+  left: calc(100% / 21 * 5);
+}
+
+.b5 {
+  left: calc(100% / 21 * 6);
+}
+
+.b6 {
+  left: calc(100% / 21 * 8);
+}
+
+.b7 {
+  left: calc(100% / 21 * 9);
+}
+
+.b8 {
+  left: calc(100% / 21 * 11);
+}
+
+.b9 {
+  left: calc(100% / 21 * 12);
+}
+
+.b10 {
+  left: calc(100% / 21 * 13);
+}
+
+.b11 {
+  left: calc(100% / 21 * 15);
+}
+
+.b12 {
+  left: calc(100% / 21 * 16);
+}
+
+.b13 {
+  left: calc(100% / 21 * 18);
+}
+
+.b14 {
+  left: calc(100% / 21 * 19);
+}
+
+.b15 {
+  left: calc(100% / 21 * 20);
 }
